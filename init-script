@@ -26,7 +26,7 @@ echo "Running Mer Boat Loader"
 
 BOOTLOGO=%BOOTLOGO%
 ALWAYSDEBUG=%ALWAYSDEBUG%
-DATA_PARTITION=%DATA_PART%
+DATA_PARTITION=/dev/mapper/dynpart-userdata
 DEFAULT_OS=%DEFAULT_OS%
 
 set_welcome_msg(){
@@ -147,7 +147,9 @@ mount_stowaways() {
 
 	mkdir /data
 	mkdir /target
-
+	if [ -n "/dev/disk/by-partlabel/super" ]; then
+		/sbin/parse-android-dynparts /dev/disk/by-partlabel/super | sh
+	fi
 	mount $DATA_PARTITION /data
 	mount --bind /data/${data_subdir}/.stowaways/${DEFAULT_OS} /target
 	mkdir /target/data # in new fs
